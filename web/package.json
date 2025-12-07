@@ -6,13 +6,21 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "format": "biome format --write",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.17",
+    "@tanstack/react-router": "^1.140.0",
+    "@tanstack/react-router-devtools": "^1.140.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-resizable-panels": "^3.0.6",
+    "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.3.8",
+    "@tanstack/router-plugin": "^1.140.0",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
