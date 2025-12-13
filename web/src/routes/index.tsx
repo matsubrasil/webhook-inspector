@@ -1,4 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
+import { Sidebar } from '../components/sidebar'
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -7,7 +9,15 @@ export const Route = createFileRoute('/')({
 function Index() {
   return (
     <div className="h-screen bg-zinc-900">
-      
+      <PanelGroup direction="horizontal">
+        <Panel defaultSize={20} minSize={15} maxSize={40}>
+          <Sidebar />
+        </Panel>
+        <PanelResizeHandle className="w-px bg-zinc-700 transition-colors duration-150 data-[resize-handle-state=hover]:bg-zin-600" />
+        <Panel defaultSize={80} minSize={60}>
+          Main Content
+        </Panel>
+      </PanelGroup>
     </div>
   )
 }
