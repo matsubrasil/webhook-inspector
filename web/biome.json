@@ -19,7 +19,7 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-       "nursery": {
+      "nursery": {
         "useSortedClasses": {
           "level": "info",
           "options": {
