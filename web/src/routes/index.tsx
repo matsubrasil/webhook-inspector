@@ -3,6 +3,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 import { SectionDataTable } from '../components/section-data-table'
 import { SectionTitle } from '../components/section-title'
 import { Sidebar } from '../components/sidebar'
+import { CodeBlock } from '../components/ui/code-block'
 import { WebhookDetailHeader } from '../components/webhook-detail-header'
 
 export const Route = createFileRoute('/')({
@@ -27,6 +28,7 @@ function Index() {
         <Panel defaultSize={80} minSize={60}>
           <div className="flex h-full flex-col">
             <WebhookDetailHeader />
+
             <div className="flex-1 overflow-y-auto">
               <div className="space-y-6 p-6">
                 <div className="space-y-4">
@@ -35,7 +37,7 @@ function Index() {
                 </div>
 
                 <div className="space-y-4">
-                  <SectionTitle>Query Params</SectionTitle>
+                  <SectionTitle>Query Parameters</SectionTitle>
                   <SectionDataTable data={overviewData} />
                 </div>
 
@@ -46,7 +48,7 @@ function Index() {
 
                 <div className="space-y-4">
                   <SectionTitle>Request Body</SectionTitle>
-                  <SectionDataTable data={overviewData} />
+                  <CodeBlock code={JSON.stringify(overviewData, null, 2)} />
                 </div>
               </div>
             </div>
