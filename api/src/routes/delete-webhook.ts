@@ -6,7 +6,7 @@ import { webhooks } from '@/db/schema'
 
 export const deleteWebhook: FastifyPluginAsyncZod = async (app) => {
   app.delete(
-    '/api/webhook/:id',
+    '/api/webhooks/:id',
     {
       schema: {
         summary: 'Delete a specific webhook by ID',
