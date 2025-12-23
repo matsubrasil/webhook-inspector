@@ -15,7 +15,6 @@ export function WebhookDetail({ id }: WebhookDetailProps) {
     queryFn: async () => {
       const response = await fetch(`http://localhost:3333/api/webhooks/${id}`)
       const data = await response.json()
-      console.log(data)
       return webhookDetailsSchema.parse(data)
     },
   })
@@ -29,6 +28,18 @@ export function WebhookDetail({ id }: WebhookDetailProps) {
     { key: 'Content-Type', value: data.contentType || 'application/json' },
     { key: 'Content-Length', value: `${data.contentLength || 0} bytes` },
   ]
+
+  const headers = Object.entries(data.headers).map(([key, value]) => ({
+    key,
+    value: String(value),
+  }))
+
+  const queryParams = Object.entries(data.queryParams || {}).map(
+    ([key, value]) => ({
+      key,
+      value: String(value),
+    }),
+  )
 
   return (
     <div className="flex h-full flex-col">
@@ -46,19 +57,22 @@ export function WebhookDetail({ id }: WebhookDetailProps) {
           </div>
 
           <div className="space-y-4">
-            <SectionTitle>Query Parameters</SectionTitle>
-            <SectionDataTable data={overviewData} />
-          </div>
-
-          <div className="space-y-4">
             <SectionTitle>Headers</SectionTitle>
-            <SectionDataTable data={overviewData} />
+            <SectionDataTable data={headers} />
           </div>
 
-          <div className="space-y-4">
-            <SectionTitle>Request Body</SectionTitle>
-            <CodeBlock code={JSON.stringify(overviewData, null, 2)} />
-          </div>
+          {queryParams.length > 0 && (
+            <div className="space-y-4">
+              <SectionTitle>Query Parameters</SectionTitle>
+              <SectionDataTable data={queryParams} />
+            </div>
+          )}
+          {!!data.body && (
+            <div className="space-y-4">
+              <SectionTitle>Request Body</SectionTitle>
+              <CodeBlock code={data.body} />
+            </div>
+          )}
         </div>
       </div>
     </div>
