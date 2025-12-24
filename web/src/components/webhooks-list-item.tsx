@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
+import { Link, useLocation, useNavigate } from '@tanstack/react-router'
 import { formatDistanceToNow } from 'date-fns'
 import { Trash2Icon } from 'lucide-react'
 import { Checkbox } from './ui/checkbox'
@@ -12,10 +12,18 @@ interface WebhookListItemProps {
     pathname: string
     createdAt: Date
   }
+  onWebhookChecked: (webhookId: string) => void
+  isWebhookChecked: boolean
 }
 
-export function WebhooksListItem({ webhook }: WebhookListItemProps) {
+export function WebhooksListItem({
+  webhook,
+  onWebhookChecked,
+  isWebhookChecked,
+}: WebhookListItemProps) {
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
+  const location = useLocation() // Usamos useLocation para checar a URL atual sem quebrar o componente
 
   const { mutate: deleteWebhook } = useMutation({
     mutationFn: async (id: string) => {
@@ -23,17 +31,38 @@ export function WebhooksListItem({ webhook }: WebhookListItemProps) {
         method: 'DELETE',
       })
     },
-    onSuccess: () => {
+    onSuccess: async (_data, variables) => {
+      // 1. Limpa o cache da lista
       queryClient.invalidateQueries({
         queryKey: ['webhooks'],
       })
+
+      // 2. Remover o cache específico do item deletado
+      queryClient.removeQueries({
+        queryKey: ['webhooks', variables],
+      })
+
+      // 3. LOGICA DE LIMPEZA DA URL:
+      // Verificamos se a URL atual contém o ID do webhook que acabamos de deletar
+      const isViewingDeletedWebhook = location.pathname.includes(variables)
+
+      if (isViewingDeletedWebhook) {
+        // Se eu estou vendo o item que deletei, volto para a raiz
+        await navigate({
+          to: '/',
+          replace: true,
+        })
+      }
     },
   })
 
   return (
     <div className="group rounded-lg transition-colors duration-150 hover:bg-zinc-700/30">
       <div className="flex items-start gap-3 px-4 py-2.5">
-        <Checkbox />
+        <Checkbox
+          onCheckedChange={() => onWebhookChecked(webhook.id)}
+          checked={isWebhookChecked}
+        />
 
         <Link
           to="/webhooks/$id"
